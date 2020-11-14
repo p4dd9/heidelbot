@@ -34,19 +34,6 @@ discordClient.on("ready", () => {
   console.info(`Logged in as ${discordClient.user.tag}!`);
 });
 
-discordClient.on("message", (message) => {
-  if (message.content === "!whoami") {
-    message.reply(message.author.displayAvatarURL());
-  }
-});
-
-discordClient.on("message", async (message) => {
-  if (message.content === "!gimmememe") {
-    const memeURL = await getRandomGiphy();
-    message.reply(`${memeURL}`);
-  }
-});
-
 discordClient.on("message", async (message) => {
   if (message.content === "!mcserverstatus") {
     const mcServerStatus = await fetchMCServerStatus();
@@ -64,7 +51,7 @@ discordClient.on("message", async (message) => {
 discordClient.on("message", async (message) => {
   if (message.content === "!mcmeme") {
     const memeURL = await getRandomGiphyByTag("minecraft");
-    message.reply(`${memeURL}`);
+    message.channel.send(`${memeURL}`);
   }
 });
 

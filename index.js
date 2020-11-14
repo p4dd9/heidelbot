@@ -6,6 +6,7 @@ const discordClient = new Discord.Client();
 const TOKEN = Object.freeze({
   DISCORD: process.env.DISCORD_TOKEN,
   GIPHY: process.env.GIPHY_TOKEN,
+  MC_STATUS_URL: process.env.MC_STATUS_URL,
 });
 
 const URLS = Object.freeze({
@@ -22,7 +23,12 @@ const getRandomGiphyByTag = async (tag) => {
   return (await response.json()).data.url;
 };
 
-discordClient.bot.login(TOKEN.DISCORD);
+const fetchMCServerStatus = async () => {
+  const response = await fetch(TOKEN.MC_STATUS_URL);
+  return await response.json();
+};
+
+discordClient.login(TOKEN.DISCORD);
 
 discordClient.on("ready", () => {
   console.info(`Logged in as ${discordClient.user.tag}!`);
@@ -38,6 +44,20 @@ discordClient.on("message", async (message) => {
   if (message.content === "!gimmememe") {
     const memeURL = await getRandomGiphy();
     message.reply(`${memeURL}`);
+  }
+});
+
+discordClient.on("message", async (message) => {
+  if (message.content === "!mcserverstatus") {
+    const mcServerStatus = await fetchMCServerStatus();
+    const { players, version, online } = mcServerStatus;
+    const { max: maxPlayerCount, online: currentPlayerCount } = players;
+
+    message.reply(
+      `Slothyx Minecraft Server is ${
+        online ? "**RUNNING**" : "**DOWN**"
+      } on v${version}. Players playing: [${currentPlayerCount}/${maxPlayerCount}] ⛏💎`
+    );
   }
 });
 

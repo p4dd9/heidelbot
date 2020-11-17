@@ -8,6 +8,21 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 9786;
 
+const channel = {
+  minecraft: "776203480880119818",
+  minecraftlogs: "778311548534784020",
+};
+
+const TOKEN = Object.freeze({
+  DISCORD: process.env.DISCORD_TOKEN,
+  GIPHY: process.env.GIPHY_TOKEN,
+  MC_STATUS_URL: process.env.MC_STATUS_URL,
+});
+
+const URLS = Object.freeze({
+  GIPHY_RANDOM: "https://api.giphy.com/v1/gifs/random?api_key=" + TOKEN.GIPHY,
+});
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -20,45 +35,32 @@ app.use(bodyParser.json());
  *    "game": {
  *        "current_players": 2,
  *        "max_players": 20
- *    },
- *    "timestamp":1605472293
+ *    }
  * }
  *
  *
  */
 
-app.post("/mcplayerjoined", (request, response) => {
-  const { timestamp, player_name, game } = request.body;
+app.post("/mcplayerjoin", (request, response) => {
+  const { player_name, game } = request.body;
   const { current_players, max_players } = game;
-
-  const date = new Date(timestamp * 1000);
-  const year = date.getFullYear();
-  const day = date.getDate();
-  const month = date.getMonth() + 1;
-  const hours = date.getHours();
-  const minutes = ("0" + date.getMinutes()).substr(-2);
-  const seconds = ("0" + date.getSeconds()).substr(-2);
-  const formattedTime = `${day}/${month}/${year} um ${hours}:${minutes}:${seconds}`;
-  const message = `:pick: **${player_name}** joined the minecraft server! **${current_players}/${max_players}** players live. *[${formattedTime}]*`;
+  const message = `:pick: **${player_name}** joined the minecraft server! **${current_players}/${max_players}** players live.`;
   console.log(message);
+  sendMessageToChannel(message, channel.minecraftlogs);
+  response.json({ requestBody: request.body });
+});
 
-  sendMessageToMCChannel(message);
-
+app.post("/mcplayerleave", (request, response) => {
+  const { player_name, game } = request.body;
+  const { current_players, max_players } = game;
+  const message = `:pick: **${player_name}** left the minecraft server! **${current_players}/${max_players}** players live.`;
+  console.log(message);
+  sendMessageToChannel(message, channel.minecraftlogs);
   response.json({ requestBody: request.body });
 });
 
 app.listen(port, () => {
   console.log(`Started on PORT ${port}`);
-});
-
-const TOKEN = Object.freeze({
-  DISCORD: process.env.DISCORD_TOKEN,
-  GIPHY: process.env.GIPHY_TOKEN,
-  MC_STATUS_URL: process.env.MC_STATUS_URL,
-});
-
-const URLS = Object.freeze({
-  GIPHY_RANDOM: "https://api.giphy.com/v1/gifs/random?api_key=" + TOKEN.GIPHY,
 });
 
 const getRandomGiphyByTag = async (tag) => {
@@ -71,8 +73,8 @@ const fetchMCServerStatus = async () => {
   return await response.json();
 };
 
-const sendMessageToMCChannel = function (message) {
-  const channel = discordClient.channels.cache.get("776203480880119818");
+const sendMessageToChannel = function (message, channelId) {
+  const channel = discordClient.channels.cache.get(channelId);
   channel.send(message);
 };
 

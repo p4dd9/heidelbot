@@ -13,6 +13,10 @@ module.exports = {
   },
   resolve: {
     extensions: [".js"],
+    alias: {
+      Discord: path.resolve(__dirname, "src/discord/"),
+      Server: path.resolve(__dirname, "src/server/"),
+    },
   },
   externals: [nodeExternals()],
 };

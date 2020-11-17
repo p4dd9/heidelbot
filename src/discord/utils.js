@@ -1,8 +1,9 @@
 import fetch from "node-fetch";
-import { TOKEN } from "./config";
+import { CONFIG } from "./discordConfig";
 
 const URLS = Object.freeze({
-  GIPHY_RANDOM: "https://api.giphy.com/v1/gifs/random?api_key=" + TOKEN.GIPHY,
+  GIPHY_RANDOM:
+    "https://api.giphy.com/v1/gifs/random?api_key=" + CONFIG.GIPHY_TOKEN,
 });
 
 export const getRandomGiphyByTag = async (tag) => {
@@ -11,6 +12,6 @@ export const getRandomGiphyByTag = async (tag) => {
 };
 
 export const fetchMCServerStatus = async () => {
-  const response = await fetch(TOKEN.MC_STATUS_URL);
+  const response = await fetch(CONFIG.MC_STATUS_URL);
   return await response.json();
 };

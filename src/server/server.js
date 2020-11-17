@@ -1,9 +1,10 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { sendMessageToChannel } from "./discordClient";
+import { sendMessageToChannel } from "../discord/discordClient";
+import { CONFIG } from "./serverConfig";
 
 const app = express();
-const port = 9786;
+const port = CONFIG.port;
 
 const channel = {
   minecraft: "776203480880119818",

@@ -1,2 +1,2 @@
-import "./discordClient";
-import "./server";
+import "./discord/discordClient";
+import "./server/server";

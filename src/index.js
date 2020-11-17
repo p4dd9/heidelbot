@@ -1,0 +1,2 @@
+import "./discordClient";
+import "./server";

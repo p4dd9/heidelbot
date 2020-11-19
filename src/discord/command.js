@@ -1,4 +1,5 @@
 import { getRandomGiphyByTag, fetchMCServerStatus } from "./utils";
+import { handleMusicCommand } from "./youtubeHandler";
 
 export const handleCommand = function (message, command) {
   switch (command) {
@@ -9,6 +10,13 @@ export const handleCommand = function (message, command) {
 
     case "mcmeme": {
       handleMcMemeCommand(message);
+      break;
+    }
+
+    case "stop":
+    case "skip":
+    case "play": {
+      handleMusicCommand(command, message);
       break;
     }
 

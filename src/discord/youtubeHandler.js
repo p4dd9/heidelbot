@@ -12,7 +12,7 @@ export async function handleMusicCommand(command, message) {
   const serverQueue = queue.get(message.guild.id);
 
   if (command === MUSIC_COMMAND.play) {
-    play(message, serverQueue);
+    executePlay(message, serverQueue);
     return;
   } else if (command === MUSIC_COMMAND.skip) {
     skip(message, serverQueue);
@@ -23,7 +23,7 @@ export async function handleMusicCommand(command, message) {
   }
 }
 
-const play = async function execute(message, serverQueue) {
+const executePlay = async function (message, serverQueue) {
   const args = message.content.split(" ");
   const voiceChannel = message.member.voice.channel;
 
@@ -97,6 +97,7 @@ const stop = function (message, serverQueue) {
 const play = function (guild, song) {
   const serverQueue = queue.get(guild.id);
   const { url, title } = song;
+
   if (!song) {
     serverQueue.voiceChannel.leave();
     queue.delete(guild.id);

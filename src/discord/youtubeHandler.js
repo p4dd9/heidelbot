@@ -110,6 +110,7 @@ const play = function (guild, song) {
 
   const options = {
     quality: "highestaudio",
+    highWaterMark: 1 << 25,
   };
   const dispatcher = serverQueue.connection
     .play(ytdl(url), options)

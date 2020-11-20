@@ -66,7 +66,9 @@ const executePlay = async function (message, serverQueue) {
     }
   } else {
     serverQueue.songs.push(song);
-    return message.channel.send(`${song.title} has been added to the queue!`);
+    return message.channel.send(
+      `**${song.title}** has been added to the queue!`
+    );
   }
 };
 
@@ -96,16 +98,21 @@ const stop = function (message, serverQueue) {
 
 const play = function (guild, song) {
   const serverQueue = queue.get(guild.id);
-  const { url, title } = song;
 
   if (!song) {
     serverQueue.voiceChannel.leave();
     queue.delete(guild.id);
+    console.log("Song is undefiend");
     return;
   }
 
+  const { url, title } = song;
+
+  const options = {
+    quality: "highestaudio",
+  };
   const dispatcher = serverQueue.connection
-    .play(ytdl(url))
+    .play(ytdl(url), options)
     .on("finish", () => {
       serverQueue.songs.shift();
       play(guild, serverQueue.songs[0]);

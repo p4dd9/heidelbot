@@ -1,5 +1,6 @@
 import ytdl from "ytdl-core";
 import { validateYouTubeUrl as validYoutubeURL } from "./utils";
+import { CHANNEL } from "./consts/channel";
 
 const queue = new Map();
 const MUSIC_COMMAND = {
@@ -9,6 +10,10 @@ const MUSIC_COMMAND = {
 };
 
 export async function handleMusicCommand(command, message) {
+  if (message.channel.id !== CHANNEL.musicBot) {
+    return;
+  }
+
   const serverQueue = queue.get(message.guild.id);
   console.log(command);
 

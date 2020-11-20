@@ -2,7 +2,7 @@ import Discord from "discord.js";
 import { CONFIG } from "./discordConfig";
 import { handleCommand } from "./command";
 
-const discordClient = new Discord.Client();
+export const discordClient = new Discord.Client();
 const commandPrefix = "!";
 
 discordClient.login(CONFIG.DISCORD_TOKEN);

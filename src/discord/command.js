@@ -1,4 +1,5 @@
 import { getRandomGiphyByTag, fetchMCServerStatus } from "./utils";
+import { discordClient } from "./discordClient";
 import { handleMusicCommand } from "./youtubeHandler";
 
 export const handleCommand = function (message, command) {
@@ -47,7 +48,5 @@ async function handleMcMemeCommand(message) {
 
 async function handleGoodnightCommand(message) {
   await message.reply(`Good night! 🐱💤`);
-
-  // TODO: FIX
   discordClient.destroy();
 }

@@ -18,7 +18,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "ffmpeg-static": "^4.2.7",
-    "ytdl-core": "^4.0.5"
+    "ytdl-core": "4.0.3"
   },
   "engines": {
     "node": "14.x"

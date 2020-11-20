@@ -10,6 +10,7 @@ const MUSIC_COMMAND = {
 
 export async function handleMusicCommand(command, message) {
   const serverQueue = queue.get(message.guild.id);
+  console.log(command);
 
   if (command === MUSIC_COMMAND.play) {
     executePlay(message, serverQueue);

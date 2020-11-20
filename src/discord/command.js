@@ -47,5 +47,7 @@ async function handleMcMemeCommand(message) {
 
 async function handleGoodnightCommand(message) {
   await message.reply(`Good night! 🐱💤`);
+
+  // TODO: FIX
   discordClient.destroy();
 }

@@ -21,3 +21,13 @@ export const validateYouTubeUrl = function (url) {
   const regExp = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
   return url.match(regExp) ? true : false;
 };
+
+export const isInVoiceChannel = function (message) {
+  if (!message.member.voice.channel) {
+    message.channel.send(
+      "You have to be in a voice channel to stop the music!"
+    );
+    return false;
+  }
+  return true;
+};

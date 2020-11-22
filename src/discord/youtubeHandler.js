@@ -1,46 +1,45 @@
 import ytdl from "ytdl-core";
-import { validateYouTubeUrl as validYoutubeURL } from "./utils";
+import {
+  validateYouTubeUrl as validYoutubeURL,
+  isInVoiceChannel,
+} from "./utils";
 import { CHANNEL } from "./consts/channel";
+import { COMMAND } from "./consts/commands";
 
 const queue = new Map();
-const MUSIC_COMMAND = {
-  play: "play",
-  skip: "skip",
-  stop: "stop",
+const options = {
+  quality: "highestaudio",
 };
 
 export async function handleMusicCommand(command, message) {
-  if (message.channel.id !== CHANNEL.musicBot) {
+  if (message.channel.id !== CHANNEL.musicBot || !isInVoiceChannel(message)) {
     return;
   }
 
   const serverQueue = queue.get(message.guild.id);
-  console.log(command);
-
-  if (command === MUSIC_COMMAND.play) {
+  if (command === COMMAND.play) {
     executePlay(message, serverQueue);
     return;
-  } else if (command === MUSIC_COMMAND.skip) {
+  } else if (command === COMMAND.skip) {
     skip(message, serverQueue);
     return;
-  } else if (command === MUSIC_COMMAND.stop) {
-    stop(message, serverQueue);
+  } else if (command === COMMAND.pause) {
+    pause(message, serverQueue);
     return;
+  } else if (command === COMMAND.resume) {
+    resume(message, serverQueue);
+    return;
+  } else {
+    message.channel.send("You need to enter a valid command!");
   }
 }
 
-const executePlay = async function (message, serverQueue) {
+async function executePlay(message, serverQueue) {
   const args = message.content.split(" ");
   const voiceChannel = message.member.voice.channel;
 
   if (!validYoutubeURL(args[1])) {
     return message.channel.send("Please enter a valid youtube URL.");
-  }
-
-  if (!voiceChannel) {
-    return message.channel.send(
-      "You need to be in a voice channel to play music!"
-    );
   }
 
   const songInfo = await ytdl.getInfo(args[1]);
@@ -63,7 +62,8 @@ const executePlay = async function (message, serverQueue) {
     queueContruct.songs.push(song);
 
     try {
-      queueContruct.connection = await voiceChannel.join();
+      const connection = await voiceChannel.join();
+      queueContruct.connection = connection;
       play(message.guild, queueContruct.songs[0]);
     } catch (err) {
       console.log(err);
@@ -72,59 +72,54 @@ const executePlay = async function (message, serverQueue) {
     }
   } else {
     serverQueue.songs.push(song);
-    return message.channel.send(
-      `**${song.title}** has been added to the queue!`
-    );
+    return message.channel.send(`${song.title} has been added to the queue!`);
   }
-};
+}
 
-const skip = function (message, serverQueue) {
-  if (!message.member.voice.channel) {
-    return message.channel.send(
-      "You have to be in a voice channel to stop the music!"
-    );
-  }
-
+function pause(message, serverQueue) {
   if (!serverQueue) {
     return message.channel.send("There is no song that I could skip!");
   }
-  serverQueue.connection.dispatcher.end();
-};
+  serverQueue.connection.dispatcher.pause();
+}
 
-const stop = function (message, serverQueue) {
-  if (!message.member.voice.channel) {
-    return message.channel.send(
-      "You have to be in a voice channel to stop the music!"
-    );
+function resume(message, serverQueue) {
+  if (!serverQueue) {
+    return message.channel.send("There is no song that I could skip!");
   }
 
-  serverQueue.songs = [];
-  serverQueue.connection.dispatcher.end();
-};
+  serverQueue.connection.dispatcher.resume();
+}
 
-const play = function (guild, song) {
+function skip(message, serverQueue) {
+  if (!serverQueue) {
+    return message.channel.send("There is no song that I could skip!");
+  }
+
+  if (serverQueue.connection.dispatcher) {
+    serverQueue.connection.dispatcher.end();
+    return message.channel.send("Skipping song!");
+  }
+}
+
+function play(guild, song) {
   const serverQueue = queue.get(guild.id);
 
   if (!song) {
     serverQueue.voiceChannel.leave();
     queue.delete(guild.id);
-    console.log("Song is undefiend");
     return;
   }
 
-  const { url, title } = song;
-
-  const options = {
-    quality: "highestaudio",
-    highWaterMark: 1 << 25,
-  };
   const dispatcher = serverQueue.connection
-    .play(ytdl(url), options)
+    .play(ytdl(song.url), options)
     .on("finish", () => {
       serverQueue.songs.shift();
       play(guild, serverQueue.songs[0]);
     })
-    .on("error", (error) => console.error(error));
+    .on("error", (error) => {
+      console.error(error);
+    });
   dispatcher.setVolumeLogarithmic(serverQueue.volume / 5);
-  serverQueue.textChannel.send(`Start playing: **${title}**`);
-};
+  serverQueue.textChannel.send(`Start playing: **${song.title}**`);
+}

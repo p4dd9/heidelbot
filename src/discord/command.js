@@ -1,29 +1,35 @@
 import { getRandomGiphyByTag, fetchMCServerStatus } from "./utils";
 import { discordClient } from "./discordClient";
 import { handleMusicCommand } from "./youtubeHandler";
+import { COMMAND } from "./consts/commands";
 
 export const handleCommand = function (message, command) {
   switch (command) {
-    case "mcserverstatus": {
+    case COMMAND.mc_serverstatus: {
       handleServerStatusCommand(message);
       break;
     }
-
-    case "mcmeme": {
+    case COMMAND.mc_meme: {
       handleMcMemeCommand(message);
       break;
     }
-
-    case "stop":
-    case "skip":
-    case "play": {
+    case COMMAND.audio_play:
+    case COMMAND.audio_skip:
+    case COMMAND.audio_pause:
+    case COMMAND.audio_resume: {
       handleMusicCommand(command, message);
       break;
     }
-
-    case "goodnight": {
+    case COMMAND.help: {
+      handleHelpCommand(message);
+      break;
+    }
+    case COMMAND.goodnight: {
       handleGoodnightCommand(message);
       break;
+    }
+    default: {
+      message.channel.send("You need to enter a valid command!");
     }
   }
 };
@@ -48,5 +54,11 @@ async function handleMcMemeCommand(message) {
 
 async function handleGoodnightCommand(message) {
   await message.reply(`Good night! 🐱💤`);
+  discordClient.destroy();
+}
+
+async function handleHelpCommand(message) {
+  const commands = Object.values(COMMAND).join(", !");
+  await message.reply(`At your service!: !${commands}`);
   discordClient.destroy();
 }

@@ -17,16 +17,16 @@ export async function handleMusicCommand(command, message) {
   }
 
   const serverQueue = queue.get(message.guild.id);
-  if (command === COMMAND.play) {
+  if (command === COMMAND.audio_play) {
     executePlay(message, serverQueue);
     return;
-  } else if (command === COMMAND.skip) {
+  } else if (command === COMMAND.audio_skip) {
     skip(message, serverQueue);
     return;
-  } else if (command === COMMAND.pause) {
+  } else if (command === COMMAND.audio_pause) {
     pause(message, serverQueue);
     return;
-  } else if (command === COMMAND.resume) {
+  } else if (command === COMMAND.audio_resume) {
     resume(message, serverQueue);
     return;
   } else {

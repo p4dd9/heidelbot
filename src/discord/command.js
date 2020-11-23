@@ -13,6 +13,7 @@ export const handleCommand = function (message, command) {
       handleMcMemeCommand(message);
       break;
     }
+    case COMMAND.audio_setvolume:
     case COMMAND.audio_play:
     case COMMAND.audio_skip:
     case COMMAND.audio_pause:

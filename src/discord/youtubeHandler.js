@@ -26,6 +26,9 @@ export async function handleMusicCommand(command, message) {
   } else if (command === COMMAND.audio_pause) {
     pause(message, serverQueue);
     return;
+  } else if (command === COMMAND.audio_setvolume) {
+    setVolume(message, serverQueue);
+    return;
   } else if (command === COMMAND.audio_resume) {
     resume(message, serverQueue);
     return;
@@ -78,17 +81,27 @@ async function executePlay(message, serverQueue) {
 
 function pause(message, serverQueue) {
   if (!serverQueue) {
-    return message.channel.send("There is no song that I could skip!");
+    return message.channel.send("There is no song that I could pause!");
   }
   serverQueue.connection.dispatcher.pause();
 }
 
 function resume(message, serverQueue) {
   if (!serverQueue) {
-    return message.channel.send("There is no song that I could skip!");
+    return message.channel.send("There is no song that I could resume!");
   }
 
   serverQueue.connection.dispatcher.resume();
+}
+
+function setVolume(message, serverQueue) {
+  const args = message.content.split(" ");
+  if (args.length != 2 || !/(10|\d)/.test(args[1])) {
+    return message.channel.send("Please enter a valid volume number 0-10.");
+  }
+  const newVolume = parseInt(args[1].match(/(10|\d)/)) / 100;
+  serverQueue.connection.dispatcher.setVolume(newVolume);
+  return message.channel.send(`Volume set to ${newVolume * 100}!`);
 }
 
 function skip(message, serverQueue) {

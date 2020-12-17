@@ -17,7 +17,7 @@ export const fetchMCServerStatus = async () => {
 };
 
 // https://stackoverflow.com/questions/28735459/how-to-validate-youtube-url-in-client-side-in-text-box
-export const validateYouTubeUrl = function (url) {
+export const isValidYoutubeURL = function (url) {
   const regExp = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
   return url.match(regExp) ? true : false;
 };

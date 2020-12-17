@@ -39,7 +39,6 @@ async function handleServerStatusCommand(message) {
   const mcServerStatus = await fetchMCServerStatus();
   const { players, version, online } = mcServerStatus;
   const { max: maxPlayerCount, online: currentPlayerCount } = players;
-  console.log("!mcserverstatus");
 
   message.reply(
     `Slothyx Minecraft Server is ${

@@ -1,15 +1,9 @@
 import ytdl from "ytdl-core";
-import {
-  validateYouTubeUrl as validYoutubeURL,
-  isInVoiceChannel,
-} from "./utils";
+import { isValidYoutubeURL, isInVoiceChannel } from "./utils";
 import { CHANNEL } from "./consts/channel";
 import { COMMAND } from "./consts/commands";
 
 const queue = new Map();
-const options = {
-  quality: "highestaudio",
-};
 
 export async function handleMusicCommand(command, message) {
   if (message.channel.id !== CHANNEL.musicBot || !isInVoiceChannel(message)) {
@@ -41,7 +35,7 @@ async function executePlay(message, serverQueue) {
   const args = message.content.split(" ");
   const voiceChannel = message.member.voice.channel;
 
-  if (!validYoutubeURL(args[1])) {
+  if (!isValidYoutubeURL(args[1])) {
     return message.channel.send("Please enter a valid youtube URL.");
   }
 
@@ -125,7 +119,9 @@ function play(guild, song) {
   }
 
   const dispatcher = serverQueue.connection
-    .play(ytdl(song.url), options)
+    .play(ytdl(song.url), {
+      quality: "highestaudio",
+    })
     .on("finish", () => {
       serverQueue.songs.shift();
       play(guild, serverQueue.songs[0]);

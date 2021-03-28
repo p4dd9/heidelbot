@@ -1,3 +1,3 @@
 export const CONFIG = {
-  port: 9786,
+    port: 9786,
 };

@@ -12,8 +12,8 @@ discordClient.on("ready", () => {
 });
 
 discordClient.on("message", async (message) => {
-  if (!message.content.startsWith(commandPrefix) || message.author.bot) return;
-  const args = message.content.slice(commandPrefix.length).trim().split(" ");
+  if (!message.content.startsWith(COMMAND_PREFIX) || message.author.bot) return;
+  const args = message.content.slice(COMMAND_PREFIX.length).trim().split(" ");
   const msgCommand = args.shift().toLowerCase();
   handleCommand(message, msgCommand);
 });

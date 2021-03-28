@@ -1,7 +1,7 @@
 import { getRandomGiphyByTag, fetchMCServerStatus } from "./utils";
 import { discordClient } from "./discordClient";
 import { handleMusicCommand } from "./youtubeHandler";
-import { COMMAND } from "./consts/commands";
+import { COMMAND } from "./consts/command";
 
 export const handleCommand = function (message, command) {
   switch (command) {
@@ -60,5 +60,4 @@ async function handleGoodnightCommand(message) {
 async function handleHelpCommand(message) {
   const commands = Object.values(COMMAND).join(", !");
   await message.reply(`At your service!: !${commands}`);
-  discordClient.destroy();
 }

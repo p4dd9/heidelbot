@@ -1,7 +1,7 @@
 import ytdl from "ytdl-core";
 import { isValidYoutubeURL, isInVoiceChannel } from "./utils";
 import { CHANNEL } from "./consts/channel";
-import { COMMAND } from "./consts/commands";
+import { COMMAND } from "./consts/command";
 
 const queue = new Map();
 

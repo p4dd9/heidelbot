@@ -5,20 +5,20 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "watch": "webpack --watch",
+    "dev": "webpack --watch",
     "demon": "nodemon ./dist/bundle.js localhost 8080",
     "start": "node ./dist/bundle.js"
   },
   "author": "Patrick Obermueller",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/opus": "^0.3.3",
+    "@discordjs/opus": "^0.5.0",
     "body-parser": "^1.19.0",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "ffmpeg-static": "^4.2.7",
-    "ytdl-core": "4.0.6"
+    "ytdl-core": "^4.5.0"
   },
   "engines": {
     "node": "14.x"

@@ -8,7 +8,7 @@
         "no-tabs": "off",
         "camelcase": "off",
         // yep
-        "linebreak-style": ["ignore", "unix"],
+        "linebreak-style": [0, "unix"],
         "no-restricted-syntax": [
             "error",
             {

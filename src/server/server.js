@@ -28,19 +28,18 @@ app.use(bodyParser.json());
 app.post('/mcplayerjoin', (request, response) => {
     const { player_name, game } = request.body;
     const { current_players, max_players } = game;
-    const message = `:pick: **${player_name}** joined the minecraft server! 
-					**${current_players}/${max_players}** players live.`;
+    const message = `:pick: **${player_name}** joined the minecraft server! **${current_players}/${max_players}** players live.`;
     console.log(message);
     sendMessageToChannel(message, CHANNEL.minecraftlogs);
     response.json({ requestBody: request.body });
 });
 
 app.post('/mcplayerdied', (request, response) => {
-  const { player_name, message } = request.body;
-  const discord_message = `:skull: **${player_name}** ${message}`;
-  console.log(discord_message);
-  sendMessageToChannel(discord_message, CHANNEL.minecraftlogs);
-  response.json({ requestBody: request.body });
+    const { player_name, message } = request.body;
+    const discord_message = `:skull: **${player_name}** ${message}`;
+    console.log(discord_message);
+    sendMessageToChannel(discord_message, CHANNEL.minecraftlogs);
+    response.json({ requestBody: request.body });
 });
 
 app.post('/mcplayerleave', (request, response) => {

@@ -7,6 +7,8 @@
         "import/prefer-default-export": 0,
         "no-tabs": "off",
         "camelcase": "off",
+        // yep
+        "linebreak-style": ["ignore", "unix"],
         "no-restricted-syntax": [
             "error",
             {

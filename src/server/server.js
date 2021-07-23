@@ -36,7 +36,7 @@ app.post('/mcplayerjoin', (request, response) => {
 
 app.post('/mcplayerdied', (request, response) => {
     const { player_name, message } = request.body;
-    const discord_message = `:skull: **${player_name}** ${message}`;
+    const discord_message = `:skull: **${player_name}** ${message}.`;
     console.log(discord_message);
     sendMessageToChannel(discord_message, CHANNEL.minecraftlogs);
     response.json({ requestBody: request.body });

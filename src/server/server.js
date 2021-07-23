@@ -35,6 +35,14 @@ app.post('/mcplayerjoin', (request, response) => {
     response.json({ requestBody: request.body });
 });
 
+app.post('/mcplayerdied', (request, response) => {
+  const { player_name, message } = request.body;
+  const discord_message = `:skull: **${player_name}** ${message}`;
+  console.log(discord_message);
+  sendMessageToChannel(discord_message, CHANNEL.minecraftlogs);
+  response.json({ requestBody: request.body });
+});
+
 app.post('/mcplayerleave', (request, response) => {
     const { player_name, game } = request.body;
     const { current_players, max_players } = game;

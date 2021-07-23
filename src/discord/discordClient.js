@@ -1,5 +1,4 @@
 import Discord from 'discord.js';
-import { CONFIG } from './discordConfig';
 import { COMMAND_PREFIX, COMMAND } from './consts/command';
 import { handleMusicCommand } from './youtubeHandler';
 import {
@@ -46,8 +45,6 @@ export const handleCommand = (message, command) => {
         }
     }
 };
-
-discordClient.login(CONFIG.DISCORD_TOKEN);
 
 discordClient.on('ready', () => {
     console.info(`Logged in as ${discordClient.user.tag}!`);

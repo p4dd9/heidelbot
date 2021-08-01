@@ -1,7 +1,8 @@
 import cron from 'node-cron';
 import fetch from 'node-fetch';
+import { createCanvas } from 'canvas';
 import { LOCATION, OPEN_WEATHER_MAP_CONFIG } from './config';
-import { sendMessageToChannel } from '../discordClient';
+import { sendMessageToChannel, sendAttachment } from '../discordClient';
 import { CHANNEL } from '../consts/channel';
 
 export class WeatherClient {
@@ -22,10 +23,20 @@ export class WeatherClient {
 
     async fetchForeCast() {
         try {
-            const res = await fetch(
-                `${this.basePath}/onecall?lat=${LOCATION.MAGARETEN.lat}&lon=${LOCATION.MAGARETEN.lng}&appid=${this.apiKey}&units=metric`,
-            );
+            const url = `${this.basePath}/onecall?lat=${LOCATION.MAGARETEN.lat}&lon=${LOCATION.MAGARETEN.lng}&appid=${this.apiKey}&units=metric`;
+            const res = await fetch(url);
             const data = await res.json();
+
+            // handle hourly
+            if (data.hourly) {
+                sendAttachment(
+                    WeatherClient.drawWeatherForecast(
+                        WeatherClient.prepareHourlyWeatherForecastData(
+                            data.hourly,
+                        ),
+                    ),
+                );
+            }
 
             // handle current weather
             if (data.current) {
@@ -49,6 +60,49 @@ export class WeatherClient {
         }
     }
 
+    static prepareHourlyWeatherForecastData(data) {
+        const hourlyTemp = [];
+        const startTime = new Date(data[0].dt * 1000);
+        const maxForecastTime = new Date(
+            new Date(startTime).getTime() + 60 * 60 * 24 * 1000,
+        );
+        const reportInterval = 4;
+
+        for (let i = 0; i < data.length; i += reportInterval) {
+            const hour = data[i];
+            if (new Date(hour.dt * 1000) > maxForecastTime) {
+                break;
+            }
+
+            hourlyTemp.push({
+                hour: WeatherClient.formatUNIXtoDate(hour.dt),
+                temp: hour.temp,
+            });
+        }
+        return hourlyTemp;
+    }
+
+    static drawWeatherForecast(hourlyWeatherData) {
+        const width = 600;
+        const height = 200;
+        const widthBetween = width / hourlyWeatherData.length;
+
+        const canvas = createCanvas(width, height);
+        const ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < hourlyWeatherData.length; i += 1) {
+            const data = hourlyWeatherData[i];
+            ctx.fillStyle = 'red';
+            ctx.fillText(data.hour, i * widthBetween, 50);
+            ctx.fillText(data.temp, i * widthBetween, 150);
+        }
+
+        return canvas.toDataURL();
+    }
+
     static capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
@@ -63,13 +117,23 @@ export class WeatherClient {
 
         return `🚨 **${sender_name}** reports **${event}** for ${WeatherClient.formatUNIXtoDate(
             start,
-        )} until ${WeatherClient.formatUNIXtoDate(end)}. ${description}`;
+            {
+                dateStyle: 'medium',
+            },
+        )} until ${WeatherClient.formatUNIXtoDate(end, {
+            dateStyle: 'medium',
+        })}. ${description}`;
     }
 
-    static formatUNIXtoDate(timestamp) {
+    static formatUNIXtoDate(
+        timestamp,
+        dateStyle = {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: false,
+        },
+    ) {
         const date = new Date(timestamp * 1000);
-        return new Intl.DateTimeFormat('de-AT', {
-            dateStyle: 'medium',
-        }).format(date);
+        return new Intl.DateTimeFormat('de-AT', dateStyle).format(date);
     }
 }

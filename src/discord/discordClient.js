@@ -1,4 +1,4 @@
-import Discord from 'discord.js';
+import Discord, { MessageAttachment } from 'discord.js';
 import { COMMAND_PREFIX, COMMAND } from './consts/command';
 import { handleMusicCommand } from './youtubeHandler';
 import {
@@ -46,10 +46,6 @@ export const handleCommand = (message, command) => {
     }
 };
 
-discordClient.on('ready', () => {
-    console.info(`Logged in as ${discordClient.user.tag}!`);
-});
-
 discordClient.on('message', async (message) => {
     if (!message.content.startsWith(COMMAND_PREFIX) || message.author.bot) {
         return;
@@ -62,4 +58,13 @@ discordClient.on('message', async (message) => {
 export const sendMessageToChannel = (message, channelId) => {
     const channel = discordClient.channels.cache.get(channelId);
     channel.send(message);
+};
+
+export const sendAttachment = (attachment, channelId) => {
+    const channel = discordClient.channels.cache.get(channelId);
+    const data = attachment.split(',')[1];
+    const buf = Buffer.from(data, 'base64');
+
+    const attachmentObj = new MessageAttachment(buf, 'weather.png');
+    channel.send('', attachmentObj);
 };

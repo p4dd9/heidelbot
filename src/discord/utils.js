@@ -31,3 +31,5 @@ export const isInVoiceChannel = (message) => {
     }
     return true;
 };
+
+export const isDev = process.env.NODE_ENV === 'development';

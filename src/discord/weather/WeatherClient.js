@@ -35,6 +35,7 @@ export class WeatherClient {
                             data.hourly,
                         ),
                     ),
+                    CHANNEL.weather,
                 );
             }
 
@@ -66,7 +67,7 @@ export class WeatherClient {
         const maxForecastTime = new Date(
             new Date(startTime).getTime() + 60 * 60 * 24 * 1000,
         );
-        const reportInterval = 4;
+        const reportInterval = 3;
 
         for (let i = 0; i < data.length; i += reportInterval) {
             const hour = data[i];
@@ -84,22 +85,37 @@ export class WeatherClient {
 
     static drawWeatherForecast(hourlyWeatherData) {
         const width = 600;
-        const height = 200;
+        const height = 120;
         const widthBetween = width / hourlyWeatherData.length;
 
         const canvas = createCanvas(width, height);
         const ctx = canvas.getContext('2d');
 
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = '#2C2F33';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = 'white';
+        ctx.font = '18px sans-serif';
+        ctx.textAlign = 'center';
+
+        ctx.fillText(
+            `${new Intl.DateTimeFormat('en-US', {
+                dateStyle: 'full',
+                timeZone: 'Europe/Vienna',
+            }).format(new Date())} - 24hrs Preview`,
+            width / 2,
+            30,
+        );
 
         for (let i = 0; i < hourlyWeatherData.length; i += 1) {
             const data = hourlyWeatherData[i];
-            ctx.fillStyle = 'red';
-            ctx.fillText(data.hour, i * widthBetween, 50);
-            ctx.fillText(data.temp, i * widthBetween, 150);
+            ctx.textBaseline = 'middle';
+            ctx.font = '14px sans-serif';
+            ctx.fillText(data.hour, i * widthBetween + 30, 60);
+            ctx.fillText(`${data.temp}°C`, i * widthBetween + 30, 90);
         }
 
+        console.log(canvas.toDataURL());
         return canvas.toDataURL();
     }
 

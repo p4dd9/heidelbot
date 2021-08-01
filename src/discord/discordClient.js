@@ -1,6 +1,7 @@
 import Discord, { MessageAttachment } from 'discord.js';
 import { COMMAND_PREFIX, COMMAND } from './consts/command';
 import { handleMusicCommand } from './youtubeHandler';
+import { isDev } from './utils';
 import {
     handleServerStatusCommand,
     handleMcMemeCommand,
@@ -56,11 +57,17 @@ discordClient.on('message', async (message) => {
 });
 
 export const sendMessageToChannel = (message, channelId) => {
+    if (isDev) {
+        return;
+    }
     const channel = discordClient.channels.cache.get(channelId);
     channel.send(message);
 };
 
 export const sendAttachment = (attachment, channelId) => {
+    if (isDev) {
+        return;
+    }
     const channel = discordClient.channels.cache.get(channelId);
     const data = attachment.split(',')[1];
     const buf = Buffer.from(data, 'base64');

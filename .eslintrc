@@ -18,6 +18,7 @@
                 "ExportDeclaration": { "multiline": true, "minProperties": 3 }
             }
         ],
+        "no-underscore-dangle": ["allow"],
         "no-restricted-syntax": [
             "error",
             {

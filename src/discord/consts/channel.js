@@ -3,4 +3,5 @@ export const CHANNEL = Object.freeze({
     minecraft: '776203480880119818',
     minecraftlogs: '778311548534784020',
     weather: '868210683144179792',
+    itshammertimelogs: '872222568973750292',
 });

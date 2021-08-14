@@ -2,7 +2,6 @@ import { CONFIG } from './discord/discordConfig';
 import { discordClient } from './discord/discordClient';
 import './server/server';
 import { WeatherClient } from './discord/weather/WeatherClient';
-import { TwitchClient } from './discord/twitch/Twitch';
 import { isDev } from './discord/utils';
 
 async function startApp() {
@@ -11,17 +10,18 @@ async function startApp() {
         const weatherClient = new WeatherClient();
         weatherClient.start();
 
-        const twitchClient = new TwitchClient();
-        twitchClient.start();
+        /* const twitchClient = new TwitchClient();
+        twitchClient.start();*/
     } else {
         await discordClient.login(CONFIG.DISCORD_TOKEN);
         discordClient.on('ready', () => {
+            console.info('Starting in production-mode.');
             console.info(`Logged in as ${discordClient.user.tag}!`);
             const weatherClient = new WeatherClient();
             weatherClient.start();
 
-            const twitchClient = new TwitchClient();
-            twitchClient.start();
+            /*const twitchClient = new TwitchClient();
+            twitchClient.start();*/
         });
     }
 }

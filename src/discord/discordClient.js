@@ -7,6 +7,7 @@ import {
     handleMcMemeCommand,
     handleHelpCommand,
 } from './commandHandler';
+import { WeatherClient } from './weather/WeatherClient';
 
 export const discordClient = new Discord.Client();
 
@@ -39,6 +40,10 @@ export const handleCommand = (message, command) => {
         }
         case COMMAND.goodnight: {
             handleGoodnightCommand(message);
+            break;
+        }
+        case COMMAND.forecast: {
+            WeatherClient.fetchForeCast();
             break;
         }
         default: {

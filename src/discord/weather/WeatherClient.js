@@ -5,25 +5,18 @@ import { LOCATION, OPEN_WEATHER_MAP_CONFIG } from './config';
 import { sendMessageToChannel, sendAttachment } from '../discordClient';
 import { CHANNEL } from '../consts/channel';
 
+const basePath = OPEN_WEATHER_MAP_CONFIG.OPEN_WEATHER_MAP_BASE_PATH;
+const apikey = OPEN_WEATHER_MAP_CONFIG.OPEN_WEATHER_MAP_API_KEY;
 export class WeatherClient {
-    apiKey;
-
-    basePath;
-
-    constructor() {
-        this.basePath = OPEN_WEATHER_MAP_CONFIG.OPEN_WEATHER_MAP_BASE_PATH;
-        this.apiKey = OPEN_WEATHER_MAP_CONFIG.OPEN_WEATHER_MAP_API_KEY;
-    }
-
     start() {
         cron.schedule('0 6 * * *', () => {
-            this.fetchForeCast();
+            WeatherClient.fetchForeCast();
         });
     }
 
-    async fetchForeCast() {
+    static async fetchForeCast() {
         try {
-            const url = `${this.basePath}/onecall?lat=${LOCATION.MAGARETEN.lat}&lon=${LOCATION.MAGARETEN.lng}&appid=${this.apiKey}&units=metric`;
+            const url = `${basePath}/onecall?lat=${LOCATION.MAGARETEN.lat}&lon=${LOCATION.MAGARETEN.lng}&appid=${apikey}&units=metric`;
             const res = await fetch(url);
             const data = await res.json();
 
@@ -115,7 +108,6 @@ export class WeatherClient {
             ctx.fillText(`${data.temp}°C`, i * widthBetween + 30, 90);
         }
 
-        console.log(canvas.toDataURL());
         return canvas.toDataURL();
     }
 

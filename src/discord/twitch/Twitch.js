@@ -29,7 +29,9 @@ export class TwitchClient {
     }
 
     async start() {
-        this.fetchCSV();
+        cron.schedule('59 21 * * SUN', () => {
+            this.fetchCSV();
+        });
     }
 
     async fetchCSV() {

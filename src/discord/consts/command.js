@@ -9,4 +9,5 @@ export const COMMAND = {
     mc_meme: 'mcmeme',
     help: 'help',
     goodnight: 'goodnight',
+    forecast: 'forecast',
 };

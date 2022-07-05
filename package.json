@@ -14,7 +14,7 @@
     "author": "Patrick Obermueller",
     "license": "ISC",
     "dependencies": {
-        "@discordjs/opus": "^0.5.3",
+        "@discordjs/opus": "^0.8.0",
         "body-parser": "^1.19.0",
         "canvas": "^2.8.0",
         "csv-parser": "^3.0.0",

@@ -24,7 +24,7 @@
         "express": "^4.17.3",
         "ffmpeg-static": "^4.4.0",
         "node-cron": "^3.0.0",
-        "node-fetch": "^2.6.1",
+        "node-fetch": "^2.6.7",
         "ytdl-core": "^4.9.0"
     },
     "engines": {

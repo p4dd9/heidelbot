@@ -4,19 +4,50 @@ import { createCanvas } from 'canvas';
 import { LOCATION, OPEN_WEATHER_MAP_CONFIG } from './config';
 import { sendMessageToChannel, sendAttachment } from '../discordClient';
 import { CHANNEL } from '../consts/channel';
+import { getRandomGiphyByTag } from '../utils';
 
 const basePath = OPEN_WEATHER_MAP_CONFIG.OPEN_WEATHER_MAP_BASE_PATH;
 const apikey = OPEN_WEATHER_MAP_CONFIG.OPEN_WEATHER_MAP_API_KEY;
 export class WeatherClient {
     start() {
+        // 07:00 (Vienna Time)
         cron.schedule('0 6 * * *', () => {
+            WeatherClient.fetchForeCast();
+        });
+
+        WeatherClient.fetchAndSendSunriseAndSunset();
+        // 20:00 (Vienna Time)
+        cron.schedule('0 19 * * *', () => {
             WeatherClient.fetchForeCast();
         });
     }
 
+    static async fetchAndSendSunriseAndSunset() {
+        try {
+            const url = `${basePath}/forecast/daily?lat=${LOCATION.SIMMERING.lat}&lon=${LOCATION.SIMMERING.lng}&cnt=2&appid=${apikey}&units=metric`;
+            const res = await fetch(url);
+            const data = await res.json();
+            const sunrise = WeatherClient.formatUNIXtoDate(
+                data.list[1].sunrise,
+            );
+            const sunset = WeatherClient.formatUNIXtoDate(data.list[1].sunset);
+            const message = `Good evening, another day of fasting ends! :muscle: GOOD JOB! :muscle: \n Tomorrow's sun rises at **${sunrise}** :sunrise: and goes down at **${sunset}** :city_dusk: (enjoy your daily "relax" giphy) `;
+            sendMessageToChannel(message, CHANNEL.ramadan);
+
+            const memeURL = await getRandomGiphyByTag('relax');
+            sendMessageToChannel(memeURL, CHANNEL.ramadan);
+            sendMessageToChannel(
+                "How was today's experience?",
+                CHANNEL.ramadan,
+            );
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     static async fetchForeCast() {
         try {
-            const url = `${basePath}/onecall?lat=${LOCATION.MAGARETEN.lat}&lon=${LOCATION.MAGARETEN.lng}&appid=${apikey}&units=metric`;
+            const url = `${basePath}/onecall?lat=${LOCATION.SIMMERING.lat}&lon=${LOCATION.SIMMERING.lng}&appid=${apikey}&units=metric`;
             const res = await fetch(url);
             const data = await res.json();
 

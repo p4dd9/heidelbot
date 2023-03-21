@@ -6,8 +6,8 @@ export const OPEN_WEATHER_MAP_CONFIG = Object.freeze({
 });
 
 export const LOCATION = Object.freeze({
-    MAGARETEN: {
-        lat: '48.18865135273521',
-        lng: '16.356794549376644',
+    SIMMERING: {
+        lat: '48.1626565',
+        lng: '16.4545884',
     },
 });

@@ -32,13 +32,13 @@ export class WeatherClient {
             );
             const sunset = WeatherClient.formatUNIXtoDate(data.list[1].sunset);
             const message = `Good evening, another day of fasting ends! :muscle: GOOD JOB! :muscle: \n Tomorrow's sun rises at **${sunrise}** :sunrise: and goes down at **${sunset}** :city_dusk: (enjoy your daily "relax" giphy) `;
-            sendMessageToChannel(message, CHANNEL.ramadan);
+            sendMessageToChannel(message, CHANNEL.fasting);
 
             const memeURL = await getRandomGiphyByTag('relax');
-            sendMessageToChannel(memeURL, CHANNEL.ramadan);
+            sendMessageToChannel(memeURL, CHANNEL.fasting);
             sendMessageToChannel(
                 "How was today's experience?",
-                CHANNEL.ramadan,
+                CHANNEL.fasting,
             );
         } catch (e) {
             console.error(e);

@@ -15,10 +15,9 @@ export class WeatherClient {
             WeatherClient.fetchForeCast();
         });
 
-        WeatherClient.fetchAndSendSunriseAndSunset();
         // 20:00 (Vienna Time)
         cron.schedule('0 19 * * *', () => {
-            WeatherClient.fetchForeCast();
+            WeatherClient.fetchAndSendSunriseAndSunset();
         });
     }
 
@@ -42,6 +41,10 @@ export class WeatherClient {
             );
         } catch (e) {
             console.error(e);
+        } finally {
+            console.log(
+                'Tried to send fetchAndSendSunriseAndSunset to discord.',
+            );
         }
     }
 

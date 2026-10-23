@@ -28,7 +28,7 @@
         "ytdl-core": "^4.9.0"
     },
     "engines": {
-        "node": "14.x"
+        "node": "24.x"
     },
     "devDependencies": {
         "@babel/core": "^7.14.8",
